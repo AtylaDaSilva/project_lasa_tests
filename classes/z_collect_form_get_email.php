@@ -710,11 +710,20 @@ class z_collect_form_get_email extends ws {
                         if (strpos($res, " ") !== false) {
                             $res = explode(" ", $res)[0];
                         }
-                    } else if (sizeof($arr = explode("CONTRIBUINTEOUTRAUFPOROPERA", str_replace([" ", "\n", "\t"], "", strtoupper($text)))) > 1) {
-                        $substr = substr($arr[3], 0, 25);
+                    } else if (
+                        sizeof($arr = explode("CONTRIBUINTEOUTRAUFPOROPERA", str_replace([" "], "", strtoupper($text)))) > 1 ||
+                        sizeof($arr = explode("CONTRIBUINTEOUTRAUFPORAPURA", str_replace([" "], "", strtoupper($text)))) > 1
+                    ) {
+                        $substr = substr($arr[1], 0, 125);
 
                         if (preg_match_all($regExp, $substr, $matches)) {
-                            $res = $matches[0][0];
+                            $res = $matches[0][5];
+                        }
+                    } else if (sizeof($arr = explode("ICMSDIFERENCIALDEAL", str_replace([" "], "", strtoupper($text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 125);
+
+                        if (preg_match_all($regExp, $sub_str, $matches)) {
+                            $res = $matches[0][4];
                         }
                     }
                 }
@@ -1170,6 +1179,12 @@ class z_collect_form_get_email extends ws {
 
                         if (preg_match_all($regExp, $substr, $matches)) {
                             $res = $matches[0][1];
+                        }
+                    } else if (sizeof($arr = explode("ICMSDIFERENCIALDEAL", str_replace([" "], "", strtoupper($text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 125);
+
+                        if (preg_match_all($regExp, $sub_str, $matches)) {
+                            $res = $matches[0][4];
                         }
                     } else {
                         $arr = explode("\n", str_replace("\N", "\n", strtoupper($text)));
@@ -2352,7 +2367,7 @@ class z_collect_form_get_email extends ws {
                 //Retorna o CNPJ do contribuinte
             case "seller_cnpj":
                 $res = "";
-                $regExp = "/(\d{2}.\d{3}.\d{3}\/\d{4}-\d{2})|(\d{9}\.\d{2}-\d{2})/"; //Dá match em CNPJ ou Inscrição Estadual
+                $regExp = "/(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2})|(\d{3}\.\d{3}\.\d{3}\-\d{2})|(\d{9}\.\d{2}-\d{2})/"; //Dá match em CNPJ, CPF ou Inscrição Estadual
                 $regExpAlt = "/^\d{2}.\d{3}.\d{3}\/\d{4}-\d{2}$/";
 
                 //GNREs
@@ -2451,8 +2466,8 @@ class z_collect_form_get_email extends ws {
                     }
                 }
 
-                //Ceará e Tocantins
-                if (strpos(strtoupper(str_replace(" ", "", $text)), "ESTADODOCEAR") !== false || strpos(strtoupper($text), "ESTADO DO TOCANTINS")) {
+                //Ceará
+                if (strpos(strtoupper(str_replace(" ", "", $text)), "ESTADODOCEAR") !== false) {
                     if (preg_match("/\d{2}.\d{3}.\d{3}\/\d{4}-\d{2}/", str_replace(" ", "", $text), $matches)) {
                         $res = $matches[0];
                     }
@@ -2585,6 +2600,13 @@ class z_collect_form_get_email extends ws {
 
                     //Matches Jul/20yy or 08/20yy
                     if (preg_match($regExp, $sub_str, $matches)) {
+                        $res = $matches[0];
+                    }
+                }
+
+                //Tocantins
+                if (strpos(str_replace([" ", "\n", "\t"], "", strtoupper($text)), "ESTADODOTOCANTINS") !== false) {
+                    if (preg_match($regExp, str_replace(" ", "", $text), $matches)) {
                         $res = $matches[0];
                     }
                 }
@@ -2769,7 +2791,9 @@ class z_collect_form_get_email extends ws {
 
                 //Tocantins
                 if (strpos(str_replace([" ", "\n", "\t"], "", strtoupper($text)), "ESTADODOTOCANTINS") !== false) {
-                    if (sizeof($arr = explode("ICMSCONSUMIDORFINALN", str_replace([" "], "", strtoupper($text)))) > 1) {
+                    if (sizeof($arr = explode("ICMSCONSUMIDORFINALN", str_replace([" "], "", strtoupper($text)))) > 1 ||
+                        sizeof($arr = explode("ICMSDIFERENCIALDEAL", str_replace([" "], "", strtoupper($text)))) > 1
+                    ) {
 
                         if (preg_match("/\d{3,4}$/", $arr[0], $matches)) {
                             $res = $matches[0];
