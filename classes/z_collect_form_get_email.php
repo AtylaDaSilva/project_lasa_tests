@@ -147,14 +147,23 @@ class z_collect_form_get_email extends ws {
                 }
 
                 //Alagoas
-                if (strpos(strtoupper($text), "ESTADO DE ALAGOAS")) {
-                    $arr = explode("\t", strtoupper($text));
+                if (strpos(str_replace([" "], "", strtoupper($text)), "ESTADODEALAGOAS") !== false) {
+                    if (sizeof($arr = explode("DAR/CB", str_replace([" "], "", strtoupper($text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 125);
+                        
+                        if (preg_match_all("/\d{2}\/20\d{2}/", $sub_str, $matches)) {
+                            $ref = explode("/", $matches[0][1]);
+                            $res = "$ref[1]-$ref[0]-01";
+                        }
+                    } else {
+                        $arr = explode("\t", strtoupper($text));
 
-                    foreach ($arr as $str) {
-                        //Matches Jul/20yy or 08/20yy
-                        if (preg_match($regExpAlt, $str, $matches)) {
-                            $date = explode("/", $matches[0]);
-                            $res = "$date[1]-$date[0]-01";
+                        foreach ($arr as $str) {
+                            //Matches Jul/20yy or 08/20yy
+                            if (preg_match($regExpAlt, $str, $matches)) {
+                                $date = explode("/", $matches[0]);
+                                $res = "$date[1]-$date[0]-01";
+                            }
                         }
                     }
                 }
@@ -396,6 +405,17 @@ class z_collect_form_get_email extends ws {
                     }
                 }
 
+                //Alagoas
+                if (strpos(strtoupper(str_replace(" ", "", $text)), "ESTADODEALAGOAS") !== false) {
+                    if (sizeof($arr = explode("VENCIMENTO:", str_replace([" ", "\n", "\t"], "", strtoupper($text)))) > 1) {
+                        $substr = substr($arr[1], 0, 25);
+
+                        if (preg_match($regExp, $substr, $matches)) {
+                            $res = $matches[0];
+                        }
+                    }
+                }
+
                 //Minas Gerais
                 if (strpos(strtoupper(str_replace(" ", "", $text)), "FAZENDADEMINASGERAIS") !== false) {
                     $arr = explode("DIGODEBARRAS", strtoupper(str_replace(" ", "", $text)));
@@ -507,6 +527,23 @@ class z_collect_form_get_email extends ws {
                     }
                 }
 
+                //Alagoas
+                if (strpos(str_replace([" "], "", strtoupper($text)), "ESTADODEALAGOAS") !== false) {
+                    if (sizeof($arr = explode("VENCIMENTO:", str_replace([" "], "", strtoupper($text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 50);
+                        
+                        if (preg_match($regExp, $sub_str, $matches)) {
+                            $res = $matches[0];
+                        }
+                    } else {
+                        $arr = explode("PRINCIPAL", strtoupper($text));
+
+                        if (preg_match($regExp, $arr[1], $matches)) {
+                            $res = $matches[0];
+                        }
+                    }
+                }
+
                 //Ceará
                 if (strpos(strtoupper(str_replace(" ", "", $text)), "ESTADODOCEAR") !== false) {
                     $arr = explode("\n", $text);
@@ -519,9 +556,8 @@ class z_collect_form_get_email extends ws {
                     }
                 }
 
-                //Alagoas, Mato Grosso do Sul ou Piauí
+                //Mato Grosso do Sul ou Piauí
                 if (
-                    strpos(strtoupper($text), "ESTADO DE ALAGOAS") ||
                     strpos(strtoupper($text), "MATO GROSSO DO SUL") ||
                     strpos(strtoupper($text), "ESTADO DO PIAU")
                 ) {
@@ -778,14 +814,22 @@ class z_collect_form_get_email extends ws {
                 }
 
                 //Alagoas
-                if (strpos(strtoupper($text), "ESTADO DE ALAGOAS")) {
-                    $arr = explode("MULTA", strtoupper($text));
-                    $sub_arr = explode("\t", $arr[1]);
+                if (strpos(str_replace([" "], "", strtoupper($text)), "ESTADODEALAGOAS") !== false) {
+                    if (sizeof($arr = explode("VENCIMENTO:", str_replace([" "], "", strtoupper($text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 100);
+                        
+                        if (preg_match_all($regExp, $sub_str, $matches)) {
+                            $res = $matches[0][4];
+                        }
+                    } else {
+                        $arr = explode("MULTA", strtoupper($text));
+                        $sub_arr = explode("\t", $arr[1]);
 
-                    foreach ($sub_arr as $str) {
-                        if (preg_match($regExp, str_replace(" ", "", $str), $matches)) {
-                            $res = $matches[0];
-                            break;
+                        foreach ($sub_arr as $str) {
+                            if (preg_match($regExp, str_replace(" ", "", $str), $matches)) {
+                                $res = $matches[0];
+                                break;
+                            }
                         }
                     }
                 }
@@ -1219,7 +1263,23 @@ class z_collect_form_get_email extends ws {
                     }
                 }
 
-                //Alagoas, Mato Grosso do Sul e Ceará
+                //Alagoas
+                if (strpos(str_replace([" "], "", strtoupper($text)), "ESTADODEALAGOAS") !== false) {
+                    if (sizeof($arr = explode("VENCIMENTO:", str_replace([" "], "", strtoupper($text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 100);
+                        
+                        if (preg_match_all($regExp, $sub_str, $matches)) {
+                            $res = $matches[0][5];
+                        }
+                    } else {
+                        $arr = explode("TOTAL", strtoupper(str_replace(" ", "", $text)));
+                        if (preg_match($regExp, $arr[1], $matches)) {
+                            $res = $matches[0];
+                        }
+                    }
+                }
+
+                //Mato Grosso do Sul e Ceará
                 if (
                     (strpos(strtoupper($text), "ESTADO DE ALAGOAS")) ||
                     (strpos(strtoupper($text), "MATO GROSSO DO SUL")) ||
@@ -2055,20 +2115,14 @@ class z_collect_form_get_email extends ws {
                 }
 
                 //Alagoas
-                if (strpos(strtoupper($text), "ESTADO DE ALAGOAS") !== false) {
-                    $arr = explode("NOME", strtoupper($text));
-                    $sub_arr = explode("\t", $arr[1]);
+                if (strpos(str_replace([" ", "\n"], "", strtoupper($text)), "ESTADODEALAGOAS") !== false) {
+                    //Replace \n with ":::" to avoid capturing the wrong text in preg_match()
+                    $arr = explode("NOME:", str_replace(["\n"], ":::", strtoupper($text)));
+                    $sub_str = substr($arr[1], 0, 200);
 
-                    foreach ($sub_arr as $str) {
-                        //Matches a name with 3 or more characters followed by a space
-                        if (preg_match($regExp, $str, $matches)) {
-                            //If there's a match, get the whole string and break the loop
-                            $res = $str;
-                            break;
-                        }
+                    if (preg_match($regExpAlt, $sub_str, $matches)) {
+                        $res = $matches[0];
                     }
-
-                    $res = str_replace(array("\n", "\t"), "", $res);
                 }
 
                 //Amazonas
@@ -2416,9 +2470,8 @@ class z_collect_form_get_email extends ws {
                     }
                 }
 
-                //Alagoas, Mato Grosso e Mato Grosso do Sul
+                //Mato Grosso e Mato Grosso do Sul
                 if (
-                    strpos(strtoupper($text), "ESTADO DE ALAGOAS") !== false ||
                     strpos(strtoupper(str_replace(" ", "", $text)), "ESTADODEMATOGROSSO") !== false ||
                     strpos(strtoupper(str_replace(" ", "", $text)), "GROSSODOSUL") !== false
                 ) {
@@ -2453,6 +2506,17 @@ class z_collect_form_get_email extends ws {
 
                     if (preg_match("/(\d{2}.\d{3}.\d{3}\/\d{4}-\d{2})|(\d{14})/", $arr[1], $matches)) {
                         $res = $matches[0];
+                    }
+                }
+
+                //Alagoas
+                if (strpos(str_replace([" "], "", strtoupper($text)), "ESTADODEALAGOAS") !== false) {
+                    if (sizeof($arr = explode("TOTAL:", str_replace([" "], "", strtoupper($text)))) > 1) {
+                        $sub_str = substr($arr[1], -50);
+                        
+                        if (preg_match($regExp, $sub_str, $matches)) {
+                            $res = $matches[0];
+                        }
                     }
                 }
 
@@ -2645,15 +2709,11 @@ class z_collect_form_get_email extends ws {
                 }
 
                 //Alagoas
-                if (strpos(strtoupper($text), "ESTADO DE ALAGOAS")) {
-                    $arr = explode("RECEITA", strtoupper($text));
+                if (strpos(str_replace([" "], "", strtoupper($text)), "ESTADODEALAGOAS") !== false) {
+                    if (sizeof($arr = explode("JUROS:", strtoupper($text))) > 1) {
+                        $sub_str = substr($arr[2], 0, 15);
 
-                    if (preg_match("/\d{4,}/", $arr[1], $matches)) {
-                        $res = $matches[0];
-                    }
-
-                    if ($res == "") {
-                        if (preg_match("/\d{4,}/", $arr[4], $matches)) {
+                        if (preg_match("/\d{4,5}/", $sub_str, $matches)) {
                             $res = $matches[0];
                         }
                     }
@@ -2929,7 +2989,7 @@ class z_collect_form_get_email extends ws {
 
                 //Alagoas e Mato Grosso do Sul
                 if (
-                    strpos(strtoupper($text), "ESTADO DE ALAGOAS") !== false ||
+                    strpos(strtoupper(str_replace(" ", "", $text)), "ESTADODEALAGOAS") !== false ||
                     strpos(strtoupper(str_replace(" ", "", $text)), "GROSSODOSUL") !== false
                 ) {
                     $arr = explode("VENCIMENTO", strtoupper($text));
@@ -3163,14 +3223,11 @@ class z_collect_form_get_email extends ws {
 
                 //Guias de Estado
                 //Alagoas
-                if (strpos(strtoupper($text), "ESTADO DE ALAGOAS")) {
-                    $arr = explode("\t\n", $text);
+                if (strpos(str_replace([" "], "", strtoupper($text)), "ESTADODEALAGOAS")) {
+                    $sub_str = substr(str_replace([" "], "", $text), 0, 75);
 
-                    foreach ($arr as $str) {
-                        if (preg_match("/\d{11}\s{1,}?\d{1}\s{1,}?\d{11}/", trim($str), $matches)) {
-                            $res = $str;
-                            break;
-                        }
+                    if (preg_match("/\d{48}/", $sub_str, $matches)) {
+                        $res = $matches[0];
                     }
                 }
 
@@ -3688,11 +3745,13 @@ class z_collect_form_get_email extends ws {
                 }
 
                 //Alagoas
-                if (strpos(strtoupper($text), "ESTADO DE ALAGOAS")) {
-                    $arr = explode("DOCUMENTO", strtoupper($text));
+                if (strpos(str_replace([" "], "", strtoupper($text)), "ESTADODEALAGOAS") !== false) {
+                    if (sizeof($arr = explode("DOCUMENTODEARRECADA", str_replace([" "], "", strtoupper($text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 50);
 
-                    if (preg_match("/\d{9,}/", $arr[1], $matches)) {
-                        $res = $matches[0];
+                        if (preg_match("/\d{9,10}/", $sub_str, $matches)) {
+                            $res = $matches[0];
+                        }
                     }
                 }
 
