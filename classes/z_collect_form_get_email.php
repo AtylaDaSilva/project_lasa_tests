@@ -286,6 +286,18 @@ class z_collect_form_get_email extends ws {
                     
                 }
 
+                //Paraiba
+                if (strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODAPARA") !== false) {
+                    if (sizeof($arr = explode("DATADEVENCIMENTO", strtoupper(str_replace(" ", "", $text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 100);
+
+                        if (preg_match_all($regExp, $sub_str, $matches)) {
+                            $date = explode("/", $matches[0][0]);
+                            $res = "$date[1]-$date[0]-01";
+                        }
+                    }
+                }
+
                 //Rio Grande do Sul
                 if (strpos(strtoupper(str_replace(" ", "", $text)), "ESTADODORIOGRANDEDOSUL") !== false) {
                     $arr = explode("REFER", strtoupper($text));
@@ -453,6 +465,17 @@ class z_collect_form_get_email extends ws {
 
                         if (preg_match($regExp, $sub_str, $matches)) {
                             $res = $matches[0];
+                        }
+                    }
+                }
+
+                //Paraiba
+                if (strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODAPARA") !== false) {
+                    if (sizeof($arr = explode("DATADEVENCIMENTO", strtoupper(str_replace(" ", "", $text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 100);
+
+                        if (preg_match_all($regExp, $sub_str, $matches)) {
+                            $res = $matches[0][0];
                         }
                     }
                 }
@@ -673,6 +696,17 @@ class z_collect_form_get_email extends ws {
                         }
 
                         $res = $match[1];
+                    }
+                }
+
+                //Paraiba
+                if (strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODAPARA") !== false) {
+                    if (sizeof($arr = explode("10-VALORPRINCIPAL", strtoupper(str_replace(" ", "", $text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 100);
+
+                        if (preg_match($regExp, $sub_str, $matches)) {
+                            $res = $matches[0];
+                        }
                     }
                 }
 
@@ -1385,6 +1419,17 @@ class z_collect_form_get_email extends ws {
                     }
                 }
 
+                //Paraiba
+                if (strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODAPARA") !== false) {
+                    if (sizeof($arr = explode("15-TOTALARECOLHER", strtoupper(str_replace(" ", "", $text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 100);
+
+                        if (preg_match($regExp, $sub_str, $matches)) {
+                            $res = $matches[0];
+                        }
+                    }
+                }
+
                 //Piauí
                 if (strpos(strtoupper($text), "ESTADO DO PIAU")) {
                     $arr = explode("TOTAL A RECOLHER", strtoupper($text));
@@ -1643,6 +1688,17 @@ class z_collect_form_get_email extends ws {
                     }
                 }
 
+                //Paraiba
+                if (strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODAPARA") !== false) {
+                    if (sizeof($arr = explode("03-RECEITA", strtoupper(str_replace(" ", "", $text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 25);
+
+                        if (preg_match("/\d{1,4}\-\d{1}/", $sub_str, $matches)) {
+                            $res = $matches[0];
+                        }
+                    }
+                }
+
                 //Pernambuco
                 if (strpos(strtoupper(str_replace(" ", "", $text)), "ESTADODEPERNAMBUCO") !== false) {
                     $arr = explode("CALCULAR", strtoupper(str_replace(" ", "", $text)));
@@ -1790,6 +1846,7 @@ class z_collect_form_get_email extends ws {
                 //Retorna o Estado da guia, ou UF favorecida caso seja uma GNRE
             case "state":
                 $res = "";
+                //Usado para garantir que o estado capturado da guia eh o resultado esperado
                 $arr_states = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
 
                 if (
@@ -1864,6 +1921,11 @@ class z_collect_form_get_email extends ws {
                     strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODOPARAN") == false
                 ) {
                     $res = "PA";
+                }
+
+                //Paraiba
+                if (strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODAPARA") !== false) {
+                    $res = "PB";
                 }
 
                 //Paraná
@@ -2002,6 +2064,11 @@ class z_collect_form_get_email extends ws {
                     strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODOPARAN") == false
                 ) {
                     $res = "PA";
+                }
+
+                //Paraiba
+                if (strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODAPARA") !== false) {
+                    $res = "PB";
                 }
 
                 if (strpos(strtoupper(str_replace(" ", "", $text)), "ESTADODEPERNAMBUCO") !== false) {
@@ -2278,6 +2345,17 @@ class z_collect_form_get_email extends ws {
                     }
                 }
 
+                //Paraiba
+                if (strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODAPARA") !== false) {
+                    if (sizeof($arr = explode("09 - PARCELA", strtoupper($text))) > 1) {
+                        $sub_str = substr($arr[1], 0, 150);
+
+                        if (preg_match($regExpAlt, $sub_str, $matches)) {
+                            $res = $matches[0];
+                        }
+                    }
+                }
+
                 //Pernambuco
                 if (strpos(strtoupper(str_replace(" ", "", $text)), "ESTADODEPERNAMBUCO") !== false) {
                     $arr = explode("DAE", strtoupper($text));
@@ -2421,7 +2499,7 @@ class z_collect_form_get_email extends ws {
                 //Retorna o CNPJ do contribuinte
             case "seller_cnpj":
                 $res = "";
-                $regExp = "/(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2})|(\d{3}\.\d{3}\.\d{3}\-\d{2})|(\d{9}\.\d{2}-\d{2})/"; //Dá match em CNPJ, CPF ou Inscrição Estadual
+                $regExp = "/(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2})|(\d{3}\.\d{3}\.\d{3}\-\d{2})|(\d{2}\.\d{3}\.\d{3}-\d{1})/"; //Dá match em CNPJ, CPF ou Inscrição Estadual
                 $regExpAlt = "/^\d{2}.\d{3}.\d{3}\/\d{4}-\d{2}$/";
 
                 //GNREs
@@ -2585,6 +2663,17 @@ class z_collect_form_get_email extends ws {
                         }
                     } else if (sizeof($arr = explode("CNPJ.:", strtoupper($text))) > 1) {
                         $sub_str = substr($arr[1], 0, 100);
+
+                        if (preg_match($regExp, $sub_str, $matches)) {
+                            $res = $matches[0];
+                        }
+                    }
+                }
+
+                //Paraiba
+                if (strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODAPARA") !== false) {
+                    if (sizeof($arr = explode("/CGC/CPF", str_replace([" ", "\n", "\t"], "", strtoupper($text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 150);
 
                         if (preg_match($regExp, $sub_str, $matches)) {
                             $res = $matches[0];
@@ -2809,6 +2898,17 @@ class z_collect_form_get_email extends ws {
 
                     if (preg_match("/\d{3,}/", $arr[1], $matches)) {
                         $res = $matches[0];
+                    }
+                }
+
+                //Paraiba
+                if (strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODAPARA") !== false) {
+                    if (sizeof($arr = explode("03 - RECEITA", strtoupper($text))) > 1) {
+                        $sub_str = substr($arr[1], 0, 50);
+
+                        if (preg_match_all("/\d{4}/", $sub_str, $matches)) {
+                            $res = !empty($matches[0][1]) ? $matches[0][1] : $matches[0][0];
+                        }
                     }
                 }
 
@@ -3087,6 +3187,17 @@ class z_collect_form_get_email extends ws {
 
                         if (preg_match($regExp, $sub_str, $matches)) {
                             $res = $matches[0];
+                        }
+                    }
+                }
+
+                //Paraiba
+                if (strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODAPARA") !== false) {
+                    if (sizeof($arr = explode("DATADEVENCIMENTO", strtoupper(str_replace(" ", "", $text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 100);
+
+                        if (preg_match_all($regExp, $sub_str, $matches)) {
+                            $res = $matches[0][0];
                         }
                     }
                 }
@@ -3372,6 +3483,17 @@ class z_collect_form_get_email extends ws {
                     }
                 }
 
+                //Paraiba
+                if (strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODAPARA") !== false) {
+                    if (sizeof($arr = explode("29-MATR", str_replace([" ", "\n", "\t"], "", strtoupper($text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 150);
+
+                        if (preg_match("/\d{11}\-\d{1}\d{11}\-\d{1}\d{11}\-\d{1}\d{11}\-\d{1}/", $sub_str, $matches)) {
+                            $res = $matches[0];
+                        }
+                    }
+                }
+
                 //Pernambuco
                 if (strpos(strtoupper(str_replace(" ", "", $text)), "ESTADODEPERNAMBUCO") !== false) {
                     $arr = explode("CALCULAR", strtoupper(str_replace(" ", "", $text)));
@@ -3534,6 +3656,17 @@ class z_collect_form_get_email extends ws {
 
                     if (preg_match("/\d{3,}/", str_replace(" ", "", $arr[1]), $matches)) {
                         $res = $matches[0];
+                    }
+                }
+
+                //Paraiba
+                if (strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODAPARA") !== false) {
+                    if (sizeof($arr = explode("DOCS:", strtoupper($text))) > 1) {
+                        $sub_str = substr($arr[1], 0, 50);
+
+                        if (preg_match("/\d{1,9}/", $sub_str, $matches)) {
+                            $res = $matches[0];
+                        }
                     }
                 }
 
@@ -3865,6 +3998,17 @@ class z_collect_form_get_email extends ws {
                         $sub_str = substr($arr[1], 0, 100);
 
                         if (preg_match("/\d{12}/", $sub_str, $matches)) {
+                            $res = $matches[0];
+                        }
+                    }
+                }
+
+                //Paraiba
+                if (strpos(strtoupper(str_replace([" ", "\n", "\t"], "", $text)), "ESTADODAPARA") !== false) {
+                    if (sizeof($arr = explode("DAR-MOD2", str_replace([" ", "\n", "\t"], "", strtoupper($text)))) > 1) {
+                        $sub_str = substr($arr[1], 0, 100);
+
+                        if (preg_match("/\d{10}/", $sub_str, $matches)) {
                             $res = $matches[0];
                         }
                     }
